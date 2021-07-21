@@ -115,13 +115,13 @@
     <div id="fullScreen_load_id"></div>
     <div id="publicUserHeadMacro_load_id"></div>
 
-    <!-- run button start -->
+    <!-- run button start 右上角运行按钮-->
     <div style="width: 30.2%;top: 48px;right: 0px;height: 50px;position: absolute;z-index: 1001;">
         <div id="graphEditor_menus_task_load_id" style="float: right;"></div>
     </div>
     <!-- run button end -->
 
-    <!-- crumbs start -->
+    <!-- crumbs start 底部面包屑导航-->
     <div style="width: 100%;position: fixed;z-index: 99999;float: left;left: 0px;bottom: 0px;text-align: center;height: 28px;line-height: 28px; background: #37714b;">
         <div id="graphEditor_crumbs_task_load_id"></div>
     </div>
@@ -329,8 +329,10 @@
 
     $(function () {
         // operation menus button
+        //嵌入运行相关按钮的网页
         ajaxLoad("graphEditor_menus_task_load_id", "/page/flow/inc/graphEditor_menus_task.html");
         //fullScreen
+        //嵌入全屏加载
         ajaxLoad("fullScreen_load_id", "/page/macro/fragmentMacro.html");
         //Header
         // ajaxLoad("publicUserHeadMacro_load_id", "/page/macro/graphHeadMacro.html", function () {

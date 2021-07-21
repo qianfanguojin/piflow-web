@@ -197,6 +197,7 @@ export default {
     }
   },
   created() {
+    //给src属性赋值
     if ( this.src === '' ){
       let baseUrl = window.location.origin;
       let herf = window.location.href.split("src=")[1];

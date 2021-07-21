@@ -211,6 +211,14 @@
             <artifactId>guava</artifactId>
             <version>29.0-jre</version>
         </dependency>
+
+        <!-- The org.codehaus.janino:commons-compiler:3.0.6 dependency -->
+        <!-- will be automatically pulled in by Maven's transitivity rules -->
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>3.0.6</version>
+        </dependency>
     </dependencies>
 
     <build>

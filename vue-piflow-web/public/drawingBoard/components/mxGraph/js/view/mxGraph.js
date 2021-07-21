@@ -7024,7 +7024,6 @@ mxGraph.prototype.cellConnected = function(edge, terminal, source, constraint)
 			if (this.isPortsEnabled())
 			{
 				var id = null;
-	
 				if (this.isPort(terminal))
 				{
 					id = terminal.getId();
@@ -8499,6 +8498,7 @@ mxGraph.prototype.isIgnoreTerminalEvent = function(evt)
  */
 mxGraph.prototype.validationAlert = function(message)
 {
+
 	mxUtils.alert(message);
 };
 
@@ -8576,7 +8576,10 @@ mxGraph.prototype.getEdgeValidationError = function(edge, source, target)
 	// Checks if we're dealing with a loop
 	if (!this.allowLoops && source == target && source != null)
 	{
-		return '';
+		//------------------------------ Custom modification content yifan-livley-01 start ------------------------------
+		return 'loop';
+		//------------------------------ Custom modification content yifan-livley-01 end   ------------------------------
+		// return '';
 	}
 	
 	// Checks if the connection is generally allowed
@@ -8598,8 +8601,11 @@ mxGraph.prototype.getEdgeValidationError = function(edge, source, target)
 			// Checks if the source and target are not connected by another edge
 			if (tmp.length > 1 || (tmp.length == 1 && tmp[0] != edge))
 			{
-				error += (mxResources.get(this.alreadyConnectedResource) ||
-					this.alreadyConnectedResource)+'\n';
+				//------------------------------ Custom modification content yifan-livley-01 start ------------------------------
+				return error += 'muti';
+				//------------------------------ Custom modification content yifan-livley-01 end   ------------------------------
+				// error += (mxResources.get(this.alreadyConnectedResource) ||
+				// 	this.alreadyConnectedResource)+'\n';
 			}
 		}
 

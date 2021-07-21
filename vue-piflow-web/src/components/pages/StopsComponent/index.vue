@@ -97,6 +97,7 @@ export default {
       if (checked){
 
         queryJson.isShow = 1;
+        console.log(records);
         records.forEach((item)=>{
           if ( item.groupName){
 
@@ -165,6 +166,7 @@ export default {
     },
 
     stopsDisplayed(queryJson){
+
       this.loading = true;
       this.$axios
           .post("/stopsManage/updatestopsComponentIsShow", this.$qs.stringify(queryJson))

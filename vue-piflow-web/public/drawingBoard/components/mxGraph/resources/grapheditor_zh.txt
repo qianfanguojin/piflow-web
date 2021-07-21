@@ -1,5 +1,5 @@
 # Resources from graph.properties
-alreadyConnected=Nodes already connected
+alreadyConnected=节点已经连接
 cancel=取消
 close=关闭
 collapse-expand=Collapse/Expand

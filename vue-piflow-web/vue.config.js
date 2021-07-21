@@ -93,16 +93,19 @@ module.exports = {
   // indexPath: 'index.html',
 
   devServer: {
-    port: 8081,
+    port: 8071,
     // sockHost: 'http://127.0.0.1',
     // disableHostCheck: true,
     // open: true,
-    // host: "localhost",
+    host: "localhost",
+    // lazy: true,
+    // filename: "main.js",
+    liveReload: false,
     proxy: {
       '/piflow-web': {
         // target: 'http://10.0.90.119:6002',
         // target: 'http://10.0.90.155:6002',
-        target: 'http://10.0.90.221:6002',
+        target: 'http://localhost:6002',
         // target: 'http://10.0.85.80:6002/piflow-web/admin',
         // target: 'http://10.0.85.82:6001',
         changeOrigin: true,

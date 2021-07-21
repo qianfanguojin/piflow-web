@@ -29,7 +29,9 @@ export default {
     };
   },
   created() {
+    //接收组件的loading事件结果来影响加载动画的显示
     this.$event.on("loading", val => {
+    
       this.loading = val;
     });
   }

@@ -13,6 +13,7 @@ if (typeof html4 !== 'undefined')
 	//html4.ATTRIBS["video::autobuffer"] = 0;
 }
 
+
 // Workaround for handling named HTML entities in mxUtils.parseXml
 // LATER: How to configure DOMParser to just ignore all entities?
 (function()
@@ -994,6 +995,43 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 	//Create a unique offset object for each graph instance.
 	this.currentTranslate = new mxPoint(0, 0);
 };
+
+/**
+ * 
+ * Custom Area
+ */
+//------------------------------ Custom modification content yifan-livley-02 start ------------------------------
+
+
+/**
+* 1. loop 单条线成环
+* 2. muti 多条线
+* 3. disConnect 不允许移动线条
+*/
+Graph.prototype.errorToast = function (message)
+{
+alert("Please initialize the method (Graph.prototype.errorToast)");
+};
+
+
+mxGraph.prototype.validationAlert = function (message) {
+	// console.log(message);
+	Graph.prototype.errorToast(message);
+}
+
+let mxGraphHandlerMoveCells = mxGraphHandler.prototype.moveCells;
+mxGraphHandler.prototype.moveCells = function(cells, dx, dy, clone, target, evt)
+{		
+	mxGraphHandlerMoveCells.apply(this, arguments);
+	for (let index = 0; index < cells.length; index++) {
+			if (cells[index].edge !== 1 && cells[index].edge !== true) {
+					return;
+			}
+			
+	} 
+	Graph.prototype.errorToast('disConnect');			
+};
+//------------------------------ Custom modification content yifan-livley-02 end   ------------------------------
 
 /**
  * Specifies if the touch UI should be used (cannot detect touch in FF so always on for Windows/Linux)
@@ -3239,8 +3277,8 @@ Graph.prototype.bytesToString = function(arr)
 Graph.prototype.compressNode = function(node)
 {
 	return Graph.compressNode(node);
+	
 };
-
 /**
  * Returns a base64 encoded version of the compressed string.
  */
@@ -3447,10 +3485,12 @@ HoverIcons.prototype.init = function()
 	var connectionHandlerActive = false;
 	
 	// Implements a listener for hover and click handling
+	// 实现对于整个画板的鼠标浮动和点击监听
 	this.graph.addMouseListener(
 	{
 	    mouseDown: mxUtils.bind(this, function(sender, me)
 	    {
+				// console.log("graph mouse down");
 	    	connectionHandlerActive = false;
 	    	var evt = me.getEvent();
 	    	
@@ -3472,6 +3512,7 @@ HoverIcons.prototype.init = function()
 	    }),
 	    mouseMove: mxUtils.bind(this, function(sender, me)
 	    {
+				// console.log("graph mouse move");
 	    	var evt = me.getEvent();
 	    	
 	    	if (this.isResetEvent(evt))
@@ -3492,6 +3533,7 @@ HoverIcons.prototype.init = function()
 	    }),
 	    mouseUp: mxUtils.bind(this, function(sender, me)
 	    {
+				//console.log("graph mouse up");
 	    	var evt = me.getEvent();
 	    	var pt = mxUtils.convertPoint(this.graph.container,
 				mxEvent.getClientX(evt), mxEvent.getClientY(evt))
@@ -3547,12 +3589,12 @@ HoverIcons.prototype.isResetEvent = function(evt, allowShift)
 };
 
 /**
- * 
+ * 创建四个方向的箭头图标（鼠标悬浮时）
  */
 HoverIcons.prototype.createArrow = function(img, tooltip)
 {
 	var arrow = null;
-	
+
 	if (mxClient.IS_IE && !mxClient.IS_SVG)
 	{
 		// Workaround for PNG images in IE6
@@ -3723,7 +3765,6 @@ HoverIcons.prototype.drag = function(evt, x, y)
 {
 	this.graph.popupMenuHandler.hideMenu();
 	this.graph.stopEditing(false);
-
 	// Checks if state was removed in call to stopEditing above
 	if (this.currentState != null)
 	{
@@ -5004,8 +5045,10 @@ if (typeof mxVertexHandler != 'undefined')
 			marker.getCell = mxUtils.bind(this, function(me)
 			{
 				var result = markerGetCell.apply(this, arguments);
-			
-				this.error = null;
+				//------------------------------ Custom modification content yifan-livley-02 start ------------------------------
+				// this.error = null;
+				//------------------------------ Custom modification content yifan-livley-02 end   ------------------------------
+				
 				
 				return result;
 			});

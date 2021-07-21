@@ -12,6 +12,7 @@ var graphGlobal = null;
 function initFlowDrawingBoardData(loadId, parentAccessPath) {
     // $('#fullScreen').show();
     window.parent.postMessage(true);
+    //获取画板节点（组件）Stop数据
     ajaxRequest({
         type: "get",
         url: "/flow/drawingBoardData",
@@ -228,6 +229,7 @@ function initFlowGraph() {
     Menus.prototype.customCellRightMenu = ['runCurrentStop', 'runCurrentAndBelowStops'];
     Actions.prototype.RunCells = RunFlowOrFlowCells;
     Actions.prototype.RunCellsUp = RunFlowOrFlowCellsUp;
+    Graph.prototype.errorToast = toastErrorMsg;
     Format.hideSidebar(false, true);
     //EditorUi.prototype.formatWidth = 0;
     $("#right-group-wrap")[0].style.display = "block";
@@ -235,10 +237,12 @@ function initFlowGraph() {
     EditorUi.prototype.init = function () {
         editorUiInit.apply(this, arguments);
         graphGlobal = this.editor.graph;
+        undoManagerGlobal = this.editor.undoManager;
         thisEditor = this.editor;
         this.actions.get('export').setEnabled(false);
         //Monitoring event
         graphGlobal.addListener(mxEvent.CELLS_ADDED, function (sender, evt) {
+            console.log("CELLS_ADDED");
             if (isExample) {
                 prohibitEditing(evt, 'ADD');
             } else {
@@ -246,6 +250,8 @@ function initFlowGraph() {
             }
         });
         graphGlobal.addListener(mxEvent.CELLS_MOVED, function (sender, evt) {
+            // console.log(undoManagerGlobal);
+            console.log("CELLS_MOVED");
             if (isExample) {
                 prohibitEditing(evt, 'MOVED');
             } else {
@@ -259,8 +265,8 @@ function initFlowGraph() {
                 removeMxCellOperation(evt);
             }
         });
-
         graphGlobal.addListener(mxEvent.CLICK, function (sender, evt) {
+            
             consumedFlag = evt.consumed ? true : false;
             flowMxEventClickFunc(evt.properties.cell, consumedFlag);
         });
@@ -269,6 +275,10 @@ function initFlowGraph() {
         graphGlobal.setCellsResizable(false);
         // repeat connection
         graphGlobal.setMultigraph(false);
+        // Disconnect cell On Move
+        graphGlobal.setDisconnectOnMove(false);
+        // Not Allow Loop connection
+        graphGlobal.setAllowLoops(false);
     };
 
     // Adds required resources (disables loading of fallback properties, this can only
@@ -1434,6 +1444,8 @@ function addMxCellOperation(evt) {
         if (cellFor && cellFor.edge) {
             var cellForSource = cellFor.source;
             var cellForTarget = cellFor.target;
+
+            //check if the cell is path
             if (cellForSource && cellForTarget
                 && (cellForSource.style && (cellForSource.style).indexOf("text\;") !== 0)
                 && (cellForTarget.style && (cellForTarget.style).indexOf("text\;") !== 0)) {
@@ -1460,6 +1472,10 @@ function addMxCellOperation(evt) {
 
 // moved MxCell operation
 function movedMxCellOperation(evt) {
+    let evtCellsArr =  evt.properties.cells;
+    if(evtCellsArr.length === 1 && evtCellsArr[0].edge == 1) {
+        console.log("Connect Line MOVE");
+    }
     statusgroup = ""
     if (evt.properties.disconnect) {
         saveXml(null, 'MOVED');   // preservation method
@@ -2257,4 +2273,19 @@ window.addEventListener("message",function(event){
 function RunFlowOrFlowCells(includeEdges) {
     StopsComponentIsNeeedSourceData(stopsId, false)
 
+}
+
+//toast error msg
+function toastErrorMsg(errorMsg) {
+    switch (errorMsg) {
+        case 'loop':
+            layer.msg('不允许连接相同元素！', {icon: 2, shade: 0, time: 2000});
+            break;
+        case 'muti':
+            layer.msg('不允许同时连接两条线！', {icon: 2, shade: 0, time: 2000});
+            break;
+        case 'disConnect':
+            layer.msg('不允许单独移动边！', {icon: 2, shade: 0, time: 2000});
+            break;
+    }
 }

@@ -1,5 +1,6 @@
 package cn.cnic.base.utils;
 
+
 import sun.misc.BASE64Decoder;
 
 import java.io.FileOutputStream;
