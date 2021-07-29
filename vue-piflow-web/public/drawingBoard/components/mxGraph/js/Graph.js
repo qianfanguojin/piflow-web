@@ -1031,6 +1031,47 @@ mxGraphHandler.prototype.moveCells = function(cells, dx, dy, clone, target, evt)
 	} 
 	Graph.prototype.errorToast('disConnect');			
 };
+
+/* Overwrite getEdgeValidationError
+ * 
+ * edge - <mxCell> that represents the edge to validate.
+ * source - <mxCell> that represents the source terminal.
+ * target - <mxCell> that represents the target terminal.
+ */
+let oldGetEdgeValidationError = mxGraph.prototype.getEdgeValidationError;
+mxGraph.prototype.getEdgeValidationError = function(edge, source, target)
+{
+	// Checks if we're dealing with a loop
+	if (!this.allowLoops && source == target && source != null)
+	{
+		//------------------------------ Custom modification content yifan-livley-01 start ------------------------------
+		return 'loop';
+		//------------------------------ Custom modification content yifan-livley-01 end   ------------------------------
+		// return '';
+	}
+	
+	if (source != null && target != null)
+	{
+		var error = '';
+
+		// Checks if the cells are already connected
+		// and adds an error message if required			
+		if (!this.multigraph)
+		{
+			var tmp = this.model.getEdgesBetween(source, target, true);
+			
+			// Checks if the source and target are not connected by another edge
+			if (tmp.length > 1 || (tmp.length == 1 && tmp[0] != edge))
+			{
+				//------------------------------ Custom modification content yifan-livley-01 start ------------------------------
+				return error += 'muti';
+				//------------------------------ Custom modification content yifan-livley-01 end   ------------------------------
+
+			}
+		}
+		oldGetEdgeValidationError.apply(this,arguments);
+	}
+};
 //------------------------------ Custom modification content yifan-livley-02 end   ------------------------------
 
 /**

@@ -8576,10 +8576,7 @@ mxGraph.prototype.getEdgeValidationError = function(edge, source, target)
 	// Checks if we're dealing with a loop
 	if (!this.allowLoops && source == target && source != null)
 	{
-		//------------------------------ Custom modification content yifan-livley-01 start ------------------------------
-		return 'loop';
-		//------------------------------ Custom modification content yifan-livley-01 end   ------------------------------
-		// return '';
+		return '';
 	}
 	
 	// Checks if the connection is generally allowed
@@ -8601,11 +8598,8 @@ mxGraph.prototype.getEdgeValidationError = function(edge, source, target)
 			// Checks if the source and target are not connected by another edge
 			if (tmp.length > 1 || (tmp.length == 1 && tmp[0] != edge))
 			{
-				//------------------------------ Custom modification content yifan-livley-01 start ------------------------------
-				return error += 'muti';
-				//------------------------------ Custom modification content yifan-livley-01 end   ------------------------------
-				// error += (mxResources.get(this.alreadyConnectedResource) ||
-				// 	this.alreadyConnectedResource)+'\n';
+				error += (mxResources.get(this.alreadyConnectedResource) ||
+					this.alreadyConnectedResource)+'\n';
 			}
 		}
 
